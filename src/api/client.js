@@ -1,4 +1,4 @@
-const BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+const BASE = 'https://ecommerce-web-backend-1xki.vercel.app';
 export const API = `${BASE}/api`;
 
 // "/uploads/x.jpg" -> full backend url, "https://..." stays as it is
