@@ -9,6 +9,8 @@ import { CheckIcon } from '../components/Icons';
 import { ErrorBox, Loader } from '../components/State';
 
 const STYLES = ['Casual', 'Formal', 'Party', 'Gym'];
+// Put your hero photo in frontend/public and name it hero.jpg (or hero.png / hero.webp)
+const HERO_FILES = ['/hero.jpg', '/hero.png', '/hero.webp'];
 
 function Row({ title, params, to }) {
   const { data, loading, error } = useProducts(params);
@@ -28,6 +30,8 @@ function Hero() {
   const { data: count } = useAsync(() => productsApi.list({ limit: 1 }), []);
   const { data: feat } = useProducts({ sort: 'rating', limit: 3 });
   const imgs = feat ? feat.products : [];
+  const [heroIdx, setHeroIdx] = useState(0);
+  const hasPhoto = heroIdx < HERO_FILES.length;
   return (
     <section className="hero">
       <div className="wrap hero-in">
@@ -41,14 +45,20 @@ function Hero() {
             <div><dt>{meta.styles.length || '—'}</dt><dd>Dress styles</dd></div>
           </dl>
         </div>
-        <div className="hero-imgs" aria-hidden={imgs.length === 0}>
-          {imgs.map((p, i) => (
-            <Link key={p.id} to={`/product/${p.id}`} className={`hero-img h${i}`}>
-              <img src={imgUrl(p.image)} alt={p.name} />
-              <span>{p.name}</span>
-            </Link>
-          ))}
-        </div>
+        {hasPhoto ? (
+          <div className="hero-photo-wrap">
+            <img className="hero-photo" src={HERO_FILES[heroIdx]} alt="Models wearing SHOP.CO clothes" onError={() => setHeroIdx((i) => i + 1)} />
+          </div>
+        ) : (
+          <div className="hero-imgs" aria-hidden={imgs.length === 0}>
+            {imgs.map((p, i) => (
+              <Link key={p.id} to={`/product/${p.id}`} className={`hero-img h${i}`}>
+                <img src={imgUrl(p.image)} alt={p.name} />
+                <span>{p.name}</span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
